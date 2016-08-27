@@ -3,6 +3,10 @@
 
 #include <vector>
 
-std::vector<float> calcSubvolumes(std::vector<float> atom_position, std::vector<std::vector<float> > vertices);
+std::vector<std::vector<float> > initializeCubeVertices();
+
+std::vector<float> calcSubvolumes(std::vector<float> atom_position);
+
+std::vector<float> calcVoxelContributions(std::vector<float> atom_position);
 
 #endif

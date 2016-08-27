@@ -3,9 +3,54 @@
 #include <iostream>
 
 
-
-std::vector<float> calcSubvolumes(std::vector<float> atom_position, std::vector<std::vector<float> > vertices)
+std::vector<std::vector<float> > initializeCubeVertices()
 {
+	int number_of_vertices = 8;
+	int xyz = 3;
+	std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyz));
+
+	vertices[0][0] = 0;
+	vertices[0][1] = 0;
+	vertices[0][2] = 0;
+
+	vertices[1][0] = 1;
+	vertices[1][1] = 0;
+	vertices[1][2] = 0;
+
+	vertices[2][0] = 1;
+	vertices[2][1] = 1;
+	vertices[2][2] = 0;
+
+	vertices[3][0] = 0;
+	vertices[3][1] = 1;
+	vertices[3][2] = 0;
+
+	vertices[4][0] = 0;
+	vertices[4][1] = 0;
+	vertices[4][2] = 1;
+
+	vertices[5][0] = 1;
+	vertices[5][1] = 0;
+	vertices[5][2] = 1;
+
+	vertices[6][0] = 1;
+	vertices[6][1] = 1;
+	vertices[6][2] = 1;
+
+	vertices[7][0] = 0;
+	vertices[7][1] = 1;
+	vertices[7][2] = 1;
+	
+	return vertices;
+
+}
+
+
+std::vector<float> calcSubvolumes(std::vector<float> atom_position)
+{
+
+	std::vector<std::vector<float> > vertices = initializeCubeVertices();
+
 	std::vector<float> volumes_of_subcuboids;
 	int xyz_coordinates = 3;
 	for (int i=0;i<vertices.size();i++)
@@ -32,6 +77,13 @@ std::vector<float> calcSubvolumes(std::vector<float> atom_position, std::vector<
 		volumes_of_subcuboids.push_back(volume_subcuboid);
 	}
 	return volumes_of_subcuboids;
+}
+
+std::vector<float> calcVoxelContributions(std::vector<float> atom_position)
+{
+/*
+float remainder = fmod(abs(numToRound), multiple);
+*/
 }
 
 

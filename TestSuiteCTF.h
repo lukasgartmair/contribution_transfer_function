@@ -23,6 +23,10 @@ public:
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test1 - Calculate Subvolumes",
 				&TestCTF::testCTF_CalculateSubvolumes));
 				
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test2 - Calculate Voxel Contributions",
+				&TestCTF::testCTF_CalculateVoxelContributions));
+
+				
 		return suiteOfTests;
 	}
  
@@ -44,45 +48,9 @@ protected:
 	void testCTF_CalculateSubvolumes() 
 	{	
 
-		int number_of_vertices = 8;
-		int xyz = 3;
-		std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyz));
-
-		vertices[0][0] = 0;
-		vertices[0][1] = 0;
-		vertices[0][2] = 0;
-
-		vertices[1][0] = 1;
-		vertices[1][1] = 0;
-		vertices[1][2] = 0;
-
-		vertices[2][0] = 1;
-		vertices[2][1] = 1;
-		vertices[2][2] = 0;
-
-		vertices[3][0] = 0;
-		vertices[3][1] = 1;
-		vertices[3][2] = 0;
-
-		vertices[4][0] = 0;
-		vertices[4][1] = 0;
-		vertices[4][2] = 1;
-
-		vertices[5][0] = 1;
-		vertices[5][1] = 0;
-		vertices[5][2] = 1;
-
-		vertices[6][0] = 1;
-		vertices[6][1] = 1;
-		vertices[6][2] = 1;
-
-		vertices[7][0] = 0;
-		vertices[7][1] = 1;
-		vertices[7][2] = 1;
-
 		std::vector<float> atom_position = {0.5, 0.5, 0.5};
 		std::vector<float> volumes_of_subcuboids;
-		volumes_of_subcuboids = calcSubvolumes(atom_position, vertices);
+		volumes_of_subcuboids = calcSubvolumes(atom_position);
 	
 		std::vector<float> assertion_subvolumes = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
 		for (int i=0;i<volumes_of_subcuboids.size();i++)
@@ -93,16 +61,35 @@ protected:
 		
 		atom_position = {0.25, 0.25, 0.25};
 
-		volumes_of_subcuboids = calcSubvolumes(atom_position, vertices);
+		volumes_of_subcuboids = calcSubvolumes(atom_position);
 	
 		assertion_subvolumes = {0.015625, 0.046875, 0.140625, 0.046875, 0.046875, 0.140625, 0.421875, 0.140625};
 		for (int i=0;i<volumes_of_subcuboids.size();i++)
 		{
 			CPPUNIT_ASSERT_EQUAL(assertion_subvolumes[i], volumes_of_subcuboids[i]);
 		}
+
 	}
 	
+	void testCTF_CalculateVoxelContributions() 
+	{	
+
+/*
+
+		std::vector<float> atom_position = {0.5, 0.5, 0.5};
+		std::vector<float> contributions_of_subcuboids;
+		contributions_of_subcuboids = calcVoxelContributions(atom_position);
 	
+		std::vector<float> assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
+		for (int i=0;i<volumes_of_subcuboids.size();i++)
+		{
+			CPPUNIT_ASSERT_EQUAL(assertion_subvolumes[i], volumes_of_subcuboids[i]);
+		}
+*/
+
+	}
+	
+
 	
 	
 
