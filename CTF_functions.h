@@ -4,8 +4,18 @@
 #include <vector>
 #include <math.h>       /* modf */
 
+typedef struct coordinate {
+float x;
+float y;
+float z;
+} coordinate;
+
 double getIntegralPart(double number);
 double getFractionalPart(double number);
+
+coordinate determineCurrentVoxelIndex(std::vector<float> atom_position, float voxel_size);
+
+coordinate projectAtompositionToUnitvoxel(std::vector<float> atom_position);
 
 std::vector<std::vector<float> > initializeCubeVertices();
 
