@@ -22,7 +22,7 @@ public:
 				
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test1 - Calculate Subvolumes",
 				&TestCTF::testCTF_CalculateSubvolumes));
-
+				
 		return suiteOfTests;
 	}
  
@@ -80,11 +80,30 @@ protected:
 		vertices[7][1] = 1;
 		vertices[7][2] = 1;
 
-	std::vector<float> atom_position = {0.5, 0.5, 0.5};
-	int number_of_verts = calculateVolumesOfSubcuboids(vertices);
-		CPPUNIT_ASSERT_EQUAL(8, number_of_verts);
+		std::vector<float> atom_position = {0.5, 0.5, 0.5};
+		std::vector<float> volumes_of_subcuboids;
+		volumes_of_subcuboids = calcSubvolumes(atom_position, vertices);
+	
+		std::vector<float> assertion_subvolumes = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
+		for (int i=0;i<volumes_of_subcuboids.size();i++)
+		{
+			CPPUNIT_ASSERT_EQUAL(assertion_subvolumes[i], volumes_of_subcuboids[i]);
+		}
 		
+		
+		atom_position = {0.25, 0.25, 0.25};
+
+		volumes_of_subcuboids = calcSubvolumes(atom_position, vertices);
+	
+		assertion_subvolumes = {0.015625, 0.046875, 0.140625, 0.046875, 0.046875, 0.140625, 0.421875, 0.140625};
+		for (int i=0;i<volumes_of_subcuboids.size();i++)
+		{
+			CPPUNIT_ASSERT_EQUAL(assertion_subvolumes[i], volumes_of_subcuboids[i]);
+		}
 	}
+	
+	
+	
 	
 
 };

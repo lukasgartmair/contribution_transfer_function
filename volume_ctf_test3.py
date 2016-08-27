@@ -23,6 +23,79 @@ vertices = [
     ]
 
 
+def calc_volumes_of_subcuboids_longversion(atom_position):
+
+    volumes_of_subcuboids = []
+    
+    # bottom
+    #(000)
+    edgde1_subcuboid1 = 0 + atom_position[0]
+    edgde2_subcuboid1 = 0 + atom_position[1] 
+    edgde3_subcuboid1 = 0 + atom_position[2] 
+    
+    volume_subcuboid1 = edgde1_subcuboid1 * edgde2_subcuboid1 * edgde3_subcuboid1
+    volumes_of_subcuboids.append(volume_subcuboid1)
+    
+    #(100)
+    edgde1_subcuboid2 = 1 - atom_position[0]
+    edgde2_subcuboid2 = 0 + atom_position[1] 
+    edgde3_subcuboid2 = 0 + atom_position[2] 
+    
+    volume_subcuboid2 = edgde1_subcuboid2 * edgde2_subcuboid2 * edgde3_subcuboid2
+    volumes_of_subcuboids.append(volume_subcuboid2)
+    
+    #(110)
+    edgde1_subcuboid3 = 1 - atom_position[0]
+    edgde2_subcuboid3 = 1 - atom_position[1] 
+    edgde3_subcuboid3 = 0 + atom_position[2] 
+    
+    volume_subcuboid3 = edgde1_subcuboid3 * edgde2_subcuboid3 * edgde3_subcuboid3
+    volumes_of_subcuboids.append(volume_subcuboid3)
+    
+    #(010)
+    edgde1_subcuboid4 = 0 + atom_position[0]
+    edgde2_subcuboid4 = 1 - atom_position[1] 
+    edgde3_subcuboid4 = 0 + atom_position[2] 
+    
+    volume_subcuboid4 = edgde1_subcuboid4 * edgde2_subcuboid4 * edgde3_subcuboid4
+    volumes_of_subcuboids.append(volume_subcuboid4)
+    
+    # top    
+    #(001)
+    edgde1_subcuboid5 = 0 + atom_position[0]
+    edgde2_subcuboid5 = 0 + atom_position[1] 
+    edgde3_subcuboid5 = 1 - atom_position[2] 
+    
+    volume_subcuboid5 = edgde1_subcuboid5 * edgde2_subcuboid5 * edgde3_subcuboid5
+    volumes_of_subcuboids.append(volume_subcuboid5)
+    
+    #(101)
+    edgde1_subcuboid6 = 1 - atom_position[0]
+    edgde2_subcuboid6 = 0 + atom_position[1] 
+    edgde3_subcuboid6 = 1 - atom_position[2] 
+    
+    volume_subcuboid6 = edgde1_subcuboid6 * edgde2_subcuboid6 * edgde3_subcuboid6
+    volumes_of_subcuboids.append(volume_subcuboid6)
+    
+    #(111)
+    edgde1_subcuboid7 = 1 - atom_position[0]
+    edgde2_subcuboid7 = 1 - atom_position[1] 
+    edgde3_subcuboid7 = 1 - atom_position[2] 
+    
+    volume_subcuboid7 = edgde1_subcuboid7 * edgde2_subcuboid7 * edgde3_subcuboid7
+    volumes_of_subcuboids.append(volume_subcuboid7)
+    
+    #(011)
+    edgde1_subcuboid8 = 0 + atom_position[0]
+    edgde2_subcuboid8 = 1 - atom_position[1] 
+    edgde3_subcuboid8 = 1 - atom_position[2] 
+    
+    volume_subcuboid8 = edgde1_subcuboid8 * edgde2_subcuboid8 * edgde3_subcuboid8
+    volumes_of_subcuboids.append(volume_subcuboid8)
+    
+    return volumes_of_subcuboids
+
+
 def generate_random_atom_positions(number_of_atoms):
     
     rnd_atom_positions = []
@@ -56,7 +129,7 @@ def calc_volumes_of_subcuboids(atom_position, vertices):
 
 cube_edge_length = 1
 volume_cube = cube_edge_length**3
-atom_positions = [(0.5,0.5,0.5)]
+atom_positions = [(0.25, 0.25, 0.25)]
 
 normalized_avcs = []
 n = 1
@@ -107,76 +180,36 @@ for ap in atom_positions:
 
 ### TESTS 
 
+import unittest
+
+class TestSubcuboidsMethods(unittest.TestCase):
+
+# volumes of subcuboids
+    
+
+    def test_volume_of_subcuboids_midpoint(self):
+        expected_vosc = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]
+        test_atom_position = (0.5, 0.5, 0.5)
+        test_vosc = calc_volumes_of_subcuboids(test_atom_position , vertices)
+        self.assertEqual(expected_vosc, test_vosc)
+        
+    def test_volume_of_subcuboids_midpoint_longversion(self):
+        expected_vosc = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]
+        test_atom_position = (0.5, 0.5, 0.5)
+        test_vosc = calc_volumes_of_subcuboids_longversion(test_atom_position)
+        self.assertEqual(expected_vosc, test_vosc)
+
+    def test_volume_of_subcuboids_shifted(self):
+        expected_vosc = [0.015625, 0.046875, 0.140625, 0.046875, 0.046875, 0.140625, 0.421875, 0.140625]
+        test_atom_position = (0.25, 0.25, 0.25)
+        test_vosc = calc_volumes_of_subcuboids(test_atom_position , vertices)
+        self.assertEqual(expected_vosc, test_vosc)
+
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+
         
 
-#def calc_volumes_of_subcuboids(atom_position):
-#
-#    volumes_of_subcuboids = []
-#    
-#    # bottom
-#    #(000)
-#    edgde1_subcuboid1 = 0 + atom_position[0]
-#    edgde2_subcuboid1 = 0 + atom_position[1] 
-#    edgde3_subcuboid1 = 0 + atom_position[2] 
-#    
-#    volume_subcuboid1 = edgde1_subcuboid1 * edgde2_subcuboid1 * edgde3_subcuboid1
-#    volumes_of_subcuboids.append(volume_subcuboid1)
-#    
-#    #(100)
-#    edgde1_subcuboid2 = 1 - atom_position[0]
-#    edgde2_subcuboid2 = 0 + atom_position[1] 
-#    edgde3_subcuboid2 = 0 + atom_position[2] 
-#    
-#    volume_subcuboid2 = edgde1_subcuboid2 * edgde2_subcuboid2 * edgde3_subcuboid2
-#    volumes_of_subcuboids.append(volume_subcuboid2)
-#    
-#    #(110)
-#    edgde1_subcuboid3 = 1 - atom_position[0]
-#    edgde2_subcuboid3 = 1 - atom_position[1] 
-#    edgde3_subcuboid3 = 0 + atom_position[2] 
-#    
-#    volume_subcuboid3 = edgde1_subcuboid3 * edgde2_subcuboid3 * edgde3_subcuboid3
-#    volumes_of_subcuboids.append(volume_subcuboid3)
-#    
-#    #(010)
-#    edgde1_subcuboid4 = 0 + atom_position[0]
-#    edgde2_subcuboid4 = 1 - atom_position[1] 
-#    edgde3_subcuboid4 = 0 + atom_position[2] 
-#    
-#    volume_subcuboid4 = edgde1_subcuboid4 * edgde2_subcuboid4 * edgde3_subcuboid4
-#    volumes_of_subcuboids.append(volume_subcuboid4)
-#    
-#    # top    
-#    #(001)
-#    edgde1_subcuboid5 = 0 + atom_position[0]
-#    edgde2_subcuboid5 = 0 + atom_position[1] 
-#    edgde3_subcuboid5 = 1 - atom_position[2] 
-#    
-#    volume_subcuboid5 = edgde1_subcuboid5 * edgde2_subcuboid5 * edgde3_subcuboid5
-#    volumes_of_subcuboids.append(volume_subcuboid5)
-#    
-#    #(101)
-#    edgde1_subcuboid6 = 1 - atom_position[0]
-#    edgde2_subcuboid6 = 0 + atom_position[1] 
-#    edgde3_subcuboid6 = 1 - atom_position[2] 
-#    
-#    volume_subcuboid6 = edgde1_subcuboid6 * edgde2_subcuboid6 * edgde3_subcuboid6
-#    volumes_of_subcuboids.append(volume_subcuboid6)
-#    
-#    #(111)
-#    edgde1_subcuboid7 = 1 - atom_position[0]
-#    edgde2_subcuboid7 = 1 - atom_position[1] 
-#    edgde3_subcuboid7 = 1 - atom_position[2] 
-#    
-#    volume_subcuboid7 = edgde1_subcuboid7 * edgde2_subcuboid7 * edgde3_subcuboid7
-#    volumes_of_subcuboids.append(volume_subcuboid7)
-#    
-#    #(011)
-#    edgde1_subcuboid8 = 0 + atom_position[0]
-#    edgde2_subcuboid8 = 1 - atom_position[1] 
-#    edgde3_subcuboid8 = 1 - atom_position[2] 
-#    
-#    volume_subcuboid8 = edgde1_subcuboid8 * edgde2_subcuboid8 * edgde3_subcuboid8
-#    volumes_of_subcuboids.append(volume_subcuboid8)
-#    
-#    return volumes_of_subcuboids

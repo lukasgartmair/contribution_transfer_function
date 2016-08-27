@@ -3,8 +3,6 @@
 
 #include <vector>
 
-int calculateVolumesOfSubcuboids(std::vector<std::vector<float> > vertices);
-
-
+std::vector<float> calcSubvolumes(std::vector<float> atom_position, std::vector<std::vector<float> > vertices);
 
 #endif
