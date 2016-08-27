@@ -103,6 +103,8 @@ protected:
 	
 	void testCTF_CalculateVoxelContributionsFromAtomposition() 
 	{	
+	
+		/// voxel position between 0 and 1
 		float voxel_size =  1;
 		std::vector<float> volumes_of_subcuboids;
 		std::vector<float> contributions_of_subcuboids;
@@ -128,6 +130,29 @@ protected:
 		assertion_contributions = {0, 0, 0, 0, 0, 0, 1, 0};
 		
 		bool vertex_corner_coincidence = checkVertexCornerCoincidence(atom_position, voxel_size);
+		
+		if (vertex_corner_coincidence == false)
+		{
+			volumes_of_subcuboids = calcSubvolumes(atom_position, voxel_size);
+			contributions_of_subcuboids = calcVoxelContributions(volumes_of_subcuboids);
+		}
+		else
+		{
+			contributions_of_subcuboids = handleVertexCornerCoincidence(atom_position, voxel_size);
+		}
+		
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
+		}
+		
+		// atom position on arbitrary all positive grid position
+		voxel_size =  1;
+		volumes_of_subcuboids;
+		contributions_of_subcuboids;
+		atom_position = {1.5, 1.5, 1.5};
+		assertion_contributions = {0, 0, 0, 0, 0, 0, 1, 0};
+		vertex_corner_coincidence = checkVertexCornerCoincidence(atom_position, voxel_size);
 		
 		if (vertex_corner_coincidence == false)
 		{

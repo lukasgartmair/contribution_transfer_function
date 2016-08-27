@@ -45,6 +45,19 @@ std::vector<std::vector<float> > initializeCubeVertices()
 
 }
 
+double getFractionalPart(double number)
+{	double fractpart, intpart;
+	fractpart = modf(number , &intpart);
+	return fractpart;
+}
+
+double getIntegralPart(double number)
+{	
+	double fractpart, intpart;
+	modf(number , &intpart);
+	return intpart;
+}
+
 bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size)
 {
 	bool conincidence = false;
@@ -92,7 +105,7 @@ std::vector<float> calcSubvolumes(std::vector<float> atom_position, float voxel_
 			
 			if (vertices[i][j] == 1)
 			{
-				edge_subcuboid = voxel_size - atom_position[j];
+				edge_subcuboid = 1 - atom_position[j];
 			}
 			else
 			{

@@ -2,6 +2,10 @@
 #define CTF_H
 
 #include <vector>
+#include <math.h>       /* modf */
+
+double getIntegralPart(double number);
+double getFractionalPart(double number);
 
 std::vector<std::vector<float> > initializeCubeVertices();
 
