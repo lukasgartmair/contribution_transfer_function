@@ -52,6 +52,61 @@ def calc_volumes_of_subcuboids(atom_position, vertices):
         volumes_of_subcuboids.append(volume_subcuboid)
         
     return volumes_of_subcuboids
+
+
+cube_edge_length = 1
+volume_cube = cube_edge_length**3
+atom_positions = [(0.5,0.5,0.5)]
+
+normalized_avcs = []
+n = 1
+
+#random_atom_positions = np.arange(0)
+#random_atom_positions = generate_random_atom_positions(n)
+
+
+for ap in atom_positions:
+     
+    # volume of subcuboids
+    vosc = calc_volumes_of_subcuboids(ap , vertices)
+    atom_vertex_contribution = 1/np.array(vosc)
+    
+    # normnalization to add up to one
+    
+    normalized_atom_vertex_contribution = atom_vertex_contribution/ np.sum(atom_vertex_contribution)
+    normalized_avcs.append(np.array(normalized_atom_vertex_contribution))
+    
+    normalized_avcs_array = np.array(normalized_avcs)
+
+# get the means of each vertex for all the runs
+
+#    size_x = np.arange(n)
+#pl.plot(size_x,normalized_avcs_array[:,0])
+#pl.hist(normalized_avcs_array[:,2])
+
+#    # should be 1
+#    test_vol = sum(vosc)
+#    
+#    x = []
+#    y = []
+#    z = []
+#    c = []
+#    for i in range(8):
+#        x.append(vertices[i][0])
+#        y.append(vertices[i][1])
+#        z.append(vertices[i][2])
+#        c.append(normalized_atom_vertex_contribution[i])
+#    
+#    fig = pl.figure()
+#    ax = fig.add_subplot(111, projection='3d')
+#    ax.scatter(x,y,z,c='b',s=normalized_atom_vertex_contribution *2000)
+#    ax.scatter(ap[0],ap[1],ap[2],c='red',s=500)
+#    pl.show()
+    
+    
+
+### TESTS 
+
         
 
 #def calc_volumes_of_subcuboids(atom_position):
@@ -125,54 +180,3 @@ def calc_volumes_of_subcuboids(atom_position, vertices):
 #    volumes_of_subcuboids.append(volume_subcuboid8)
 #    
 #    return volumes_of_subcuboids
-
-cube_edge_length = 1
-volume_cube = cube_edge_length**3
-atom_positions = [(0.7,0.7,0.1)]
-
-normalized_avcs = []
-n = 1
-
-#random_atom_positions = np.arange(0)
-#random_atom_positions = generate_random_atom_positions(n)
-
-
-for ap in atom_positions:
-     
-    # volume of subcuboids
-    vosc = calc_volumes_of_subcuboids(ap , vertices)
-    atom_vertex_contribution = 1/np.array(vosc)
-    
-    # normnalization to add up to one
-    
-    normalized_atom_vertex_contribution = atom_vertex_contribution/ np.sum(atom_vertex_contribution)
-    normalized_avcs.append(np.array(normalized_atom_vertex_contribution))
-    
-    normalized_avcs_array = np.array(normalized_avcs)
-
-# get the means of each vertex for all the runs
-
-#    size_x = np.arange(n)
-#pl.plot(size_x,normalized_avcs_array[:,0])
-#pl.hist(normalized_avcs_array[:,2])
-
-#    # should be 1
-#    test_vol = sum(vosc)
-#    
-#    x = []
-#    y = []
-#    z = []
-#    c = []
-#    for i in range(8):
-#        x.append(vertices[i][0])
-#        y.append(vertices[i][1])
-#        z.append(vertices[i][2])
-#        c.append(normalized_atom_vertex_contribution[i])
-#    
-#    fig = pl.figure()
-#    ax = fig.add_subplot(111, projection='3d')
-#    ax.scatter(x,y,z,c='b',s=normalized_atom_vertex_contribution *2000)
-#    ax.scatter(ap[0],ap[1],ap[2],c='red',s=500)
-#    pl.show()
-    
-    
