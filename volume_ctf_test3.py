@@ -9,19 +9,20 @@ import numpy as np
 import matplotlib.pyplot as pl
 from mpl_toolkits.mplot3d import Axes3D
 
-vertices = [
-# bottom
-    (0, 0, 0),
-    (1, 0, 0),
-    (1, 1, 0),
-    (0, 1, 0),
-# top
-    (0, 0, 1),
-    (1, 0, 1),
-    (1, 1, 1),
-    (0, 1, 1)
-    ]
-
+def initialize_vertices():
+    vertices = [
+    # bottom
+        (0, 0, 0),
+        (1, 0, 0),
+        (1, 1, 0),
+        (0, 1, 0),
+    # top
+        (0, 0, 1),
+        (1, 0, 1),
+        (1, 1, 1),
+        (0, 1, 1)
+        ]
+    return vertices
 
 def calc_volumes_of_subcuboids_longversion(atom_position):
 
@@ -108,7 +109,8 @@ def generate_random_atom_positions(number_of_atoms):
         
     return rnd_atom_positions
     
-def calc_volumes_of_subcuboids(atom_position, vertices):
+def calc_volumes_of_subcuboids(atom_position):
+    vertices = initialize_vertices()
     volumes_of_subcuboids = []
     for v in vertices:
         
@@ -122,6 +124,7 @@ def calc_volumes_of_subcuboids(atom_position, vertices):
             edges_subcuboid.append(edgde_subcuboid)
             
         volume_subcuboid = np.prod(np.array(edges_subcuboid))  
+        
         volumes_of_subcuboids.append(volume_subcuboid)
         
     return volumes_of_subcuboids
@@ -129,8 +132,8 @@ def calc_volumes_of_subcuboids(atom_position, vertices):
 
 cube_edge_length = 1
 volume_cube = cube_edge_length**3
-atom_positions = [(0.25, 0.25, 0.25)]
-
+atom_positions = [(1, 1, 1)]
+number_of_vertices = 8
 normalized_avcs = []
 n = 1
 
@@ -139,17 +142,28 @@ n = 1
 
 
 for ap in atom_positions:
+    
+    vertices = initialize_vertices()     
      
-    # volume of subcuboids
-    vosc = calc_volumes_of_subcuboids(ap , vertices)
-    atom_vertex_contribution = 1/np.array(vosc)
-    
-    # normnalization to add up to one
-    
-    normalized_atom_vertex_contribution = atom_vertex_contribution/ np.sum(atom_vertex_contribution)
-    normalized_avcs.append(np.array(normalized_atom_vertex_contribution))
-    
-    normalized_avcs_array = np.array(normalized_avcs)
+    for x,v in enumerate(vertices):
+        if v == ap:
+            normalized_avcs_array = np.zeros(number_of_vertices)
+            normalized_avcs_array[x] = 1
+            break
+            
+        
+        
+     
+        # volume of subcuboids
+        vosc = calc_volumes_of_subcuboids(ap)
+        atom_vertex_contribution = 1/np.array(vosc)
+        
+        # normnalization to add up to one
+        
+        normalized_atom_vertex_contribution = atom_vertex_contribution/ np.sum(atom_vertex_contribution)
+        normalized_avcs.append(np.array(normalized_atom_vertex_contribution))
+        
+        normalized_avcs_array = np.array(normalized_avcs)
 
 # get the means of each vertex for all the runs
 
@@ -190,7 +204,7 @@ class TestSubcuboidsMethods(unittest.TestCase):
     def test_volume_of_subcuboids_midpoint(self):
         expected_vosc = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]
         test_atom_position = (0.5, 0.5, 0.5)
-        test_vosc = calc_volumes_of_subcuboids(test_atom_position , vertices)
+        test_vosc = calc_volumes_of_subcuboids(test_atom_position)
         self.assertEqual(expected_vosc, test_vosc)
         
     def test_volume_of_subcuboids_midpoint_longversion(self):
@@ -202,9 +216,9 @@ class TestSubcuboidsMethods(unittest.TestCase):
     def test_volume_of_subcuboids_shifted(self):
         expected_vosc = [0.015625, 0.046875, 0.140625, 0.046875, 0.046875, 0.140625, 0.421875, 0.140625]
         test_atom_position = (0.25, 0.25, 0.25)
-        test_vosc = calc_volumes_of_subcuboids(test_atom_position , vertices)
+        test_vosc = calc_volumes_of_subcuboids(test_atom_position)
         self.assertEqual(expected_vosc, test_vosc)
-
+        
 
 
 if __name__ == '__main__':

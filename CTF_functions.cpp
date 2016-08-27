@@ -45,8 +45,35 @@ std::vector<std::vector<float> > initializeCubeVertices()
 
 }
 
+bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size)
+{
+	bool conincidence = false;
+	std::vector<std::vector<float> > vertices = initializeCubeVertices();
+	for (int i=0;i<vertices.size();i++)
+	{
+		if (atom_position[0] == vertices[i][0] && (atom_position[1] == vertices[i][1] && (atom_position[2] == vertices[i][2])))
+		{
+			conincidence = true;
+		}
+	}
+	return conincidence;
+}
 
-std::vector<float> calcSubvolumes(std::vector<float> atom_position)
+std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size)
+{
+	std::vector<float> normalized_voxel_contributions = {0, 0, 0, 0, 0, 0, 0, 0};
+	std::vector<std::vector<float> > vertices = initializeCubeVertices();
+	for (int i=0;i<vertices.size();i++)
+	{
+		if (atom_position[0] == vertices[i][0] && (atom_position[1] == vertices[i][1] && (atom_position[2] == vertices[i][2])))
+		{
+			normalized_voxel_contributions[i] = 1;
+		}
+	}
+	return normalized_voxel_contributions;
+}
+
+std::vector<float> calcSubvolumes(std::vector<float> atom_position, float voxel_size)
 {
 
 	std::vector<std::vector<float> > vertices = initializeCubeVertices();
@@ -55,7 +82,7 @@ std::vector<float> calcSubvolumes(std::vector<float> atom_position)
 	int xyz_coordinates = 3;
 	for (int i=0;i<vertices.size();i++)
 	{
-		// the ininitialization with one instead of zero makes the iterative multiplication possible
+		// the initialization with one instead of zero makes the iterative multiplication possible
 		float volume_subcuboid = 1; 
 		
 		for (int j=0; j<xyz_coordinates;j++)
@@ -65,7 +92,7 @@ std::vector<float> calcSubvolumes(std::vector<float> atom_position)
 			
 			if (vertices[i][j] == 1)
 			{
-				edge_subcuboid = 1 - atom_position[j];
+				edge_subcuboid = voxel_size - atom_position[j];
 			}
 			else
 			{
@@ -73,7 +100,6 @@ std::vector<float> calcSubvolumes(std::vector<float> atom_position)
 			}
 			volume_subcuboid = volume_subcuboid * edge_subcuboid;		
 		} 
-		
 		volumes_of_subcuboids.push_back(volume_subcuboid);
 	}
 	return volumes_of_subcuboids;
@@ -89,7 +115,9 @@ std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboi
 	for (int i=0;i<number_of_vertices;i++)
 	{
 		float absolute_contribution = 0;
+
 		absolute_contribution = 1 / volumes_of_subcuboids[i];
+
 		absolute_voxel_contributions.push_back(absolute_contribution);
 	}
 	// sum of absolute contributions
@@ -98,7 +126,6 @@ std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboi
 	{
 		sum_of_all_absolute_contributions = sum_of_all_absolute_contributions + absolute_voxel_contributions[i];
 	}
-	std::cout << sum_of_all_absolute_contributions << std::endl;
 	// normalized contributions
 	for (int i=0;i<number_of_vertices;i++)
 	{
@@ -108,8 +135,38 @@ std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboi
 	}
 	
 	return normalized_voxel_contributions;
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
