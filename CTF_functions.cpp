@@ -1,6 +1,7 @@
 #include "CTF_functions.h"
 #include <vector>
 #include <iostream>
+#include <stdlib.h>     /* abs */
 
 
 std::vector<std::vector<float> > initializeCubeVertices()
@@ -47,7 +48,8 @@ std::vector<std::vector<float> > initializeCubeVertices()
 double getFractionalPart(double number)
 {	double fractpart, intpart;
 	fractpart = modf(number , &intpart);
-	return fractpart;
+	// important to return the absolute value with fabs not abs!
+	return fabs(fractpart);
 }
 
 double getIntegralPart(double number)
@@ -57,8 +59,11 @@ double getIntegralPart(double number)
 	return intpart;
 }
 
-coordinate determineCurrentVoxelIndex(std::vector<float> atom_position, float voxel_size)
+/*
+std::vector<std::vector<int> > determineSurroundingVoxelIndices(std::vector<float> atom_position, float voxel_size)
 {
+
+	vertices = initializeVertices();
 	int ix = 0;
 	int iy = 0;
 	int iz = 0;
@@ -70,6 +75,7 @@ coordinate determineCurrentVoxelIndex(std::vector<float> atom_position, float vo
 	coordinate voxel_index = {ix/voxel_size, iy/voxel_size , iz/voxel_size};
 	return voxel_index;
 }
+*/
 
 coordinate projectAtompositionToUnitvoxel(std::vector<float> atom_position)
 {

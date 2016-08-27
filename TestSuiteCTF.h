@@ -155,12 +155,10 @@ protected:
 		coordinate current_voxel_index;
 		coordinate current_unit_voxel_index;
 		
-		current_voxel_index = determineCurrentVoxelIndex(atom_position, voxel_size);
-		
 		current_unit_voxel_index = projectAtompositionToUnitvoxel(atom_position);
 		
 		// this dual concept is shit! either change everything to coordinates or everything to vectors!!!!
-		// this is just a workaround and of course to refactor!
+		// this is just a workaround and of course to refactor soon!
 		std::vector<float> fractional_atom_position {0, 0, 0};
 
 		fractional_atom_position[0] = current_unit_voxel_index.x;
@@ -179,7 +177,6 @@ protected:
 			contributions_of_subcuboids = handleVertexCornerCoincidence(fractional_atom_position, voxel_size);
 		}
 		
-		
 		assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
 		for (int i=0;i<assertion_contributions.size();i++)
 		{
@@ -187,6 +184,39 @@ protected:
 		}
 		
 		
+		// atom position on arbitrary all positive grid position
+		voxel_size =  1;
+		volumes_of_subcuboids;
+		contributions_of_subcuboids;
+		atom_position = {-1.5, -1.5, -1.5};
+		
+		current_unit_voxel_index = projectAtompositionToUnitvoxel(atom_position);
+		
+		// this dual concept is shit! either change everything to coordinates or everything to vectors!!!!
+		// this is just a workaround and of course to refactor soon!
+
+		fractional_atom_position[0] = current_unit_voxel_index.x;
+		fractional_atom_position[1] = current_unit_voxel_index.y;
+		fractional_atom_position[2] = current_unit_voxel_index.z;
+		
+		vertex_corner_coincidence = checkVertexCornerCoincidence(fractional_atom_position, voxel_size);
+		
+		if (vertex_corner_coincidence == false)
+		{
+			volumes_of_subcuboids = calcSubvolumes(fractional_atom_position, voxel_size);
+			contributions_of_subcuboids = calcVoxelContributions(volumes_of_subcuboids);
+		}
+		else
+		{
+			contributions_of_subcuboids = handleVertexCornerCoincidence(fractional_atom_position, voxel_size);
+		}
+		
+		assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
+		}
+	
 	}
 	
 	
