@@ -44,9 +44,7 @@ for i in range(2000):
     st4 = A2 / (L**2)
     
     sts = np.array([st1,st2,st3,st4])
-    
-    sts_normalized = sts / np.sum(sts)
-    
+
     c1 = 1/A1
     c2 = 1/A2
     c3 = 1/A3
@@ -57,7 +55,7 @@ for i in range(2000):
     cs_normalized = cs / np.sum(cs)
     
     css_total.append(cs_normalized)
-    sts_total.append(sts_normalized)
+    sts_total.append(sts)
     
 
 if np.array(css_total).all() == np.array(sts_total).all():
