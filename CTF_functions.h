@@ -7,6 +7,6 @@ std::vector<std::vector<float> > initializeCubeVertices();
 
 std::vector<float> calcSubvolumes(std::vector<float> atom_position);
 
-std::vector<float> calcVoxelContributions(std::vector<float> atom_position);
+std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboids);
 
 #endif

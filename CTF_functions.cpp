@@ -79,32 +79,37 @@ std::vector<float> calcSubvolumes(std::vector<float> atom_position)
 	return volumes_of_subcuboids;
 }
 
-std::vector<float> calcVoxelContributions(std::vector<float> atom_position)
+std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboids)
 {
-/*
-float remainder = fmod(abs(numToRound), multiple);
-*/
+	std::vector<float> absolute_voxel_contributions;
+	std::vector<float> normalized_voxel_contributions;
+	int number_of_vertices = 8;
+
+	// absolute contribution
+	for (int i=0;i<number_of_vertices;i++)
+	{
+		float absolute_contribution = 0;
+		absolute_contribution = 1 / volumes_of_subcuboids[i];
+		absolute_voxel_contributions.push_back(absolute_contribution);
+	}
+	// sum of absolute contributions
+	float sum_of_all_absolute_contributions = 0;
+	for (int i=0;i<number_of_vertices;i++)
+	{
+		sum_of_all_absolute_contributions = sum_of_all_absolute_contributions + absolute_voxel_contributions[i];
+	}
+	std::cout << sum_of_all_absolute_contributions << std::endl;
+	// normalized contributions
+	for (int i=0;i<number_of_vertices;i++)
+	{
+		float normalized_contribution = 0;
+		normalized_contribution = absolute_voxel_contributions[i] / sum_of_all_absolute_contributions;
+		normalized_voxel_contributions.push_back(normalized_contribution);
+	}
+	
+	return normalized_voxel_contributions;
+
+
 }
 
 
-
-// this is the corresponding python function to reproduce
-
-/* def calc_volumes_of_subcuboids(atom_position, vertices):
-    volumes_of_subcuboids = []
-    for v in vertices:
-        
-        edges_subcuboid = []
-        for i,index in enumerate(v): 
-            if index == 1:
-                edgde_subcuboid = 1 - atom_position[i]
-            else:
-                edgde_subcuboid = 0 + atom_position[i]
-                
-            edges_subcuboid.append(edgde_subcuboid)
-            
-        volume_subcuboid = np.prod(np.array(edges_subcuboid))  
-        volumes_of_subcuboids.append(volume_subcuboid)
-        
-    return volumes_of_subcuboids
-*/

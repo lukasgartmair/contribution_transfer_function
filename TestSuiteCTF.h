@@ -64,7 +64,7 @@ protected:
 		volumes_of_subcuboids = calcSubvolumes(atom_position);
 	
 		assertion_subvolumes = {0.015625, 0.046875, 0.140625, 0.046875, 0.046875, 0.140625, 0.421875, 0.140625};
-		for (int i=0;i<volumes_of_subcuboids.size();i++)
+		for (int i=0;i<assertion_subvolumes.size();i++)
 		{
 			CPPUNIT_ASSERT_EQUAL(assertion_subvolumes[i], volumes_of_subcuboids[i]);
 		}
@@ -73,20 +73,31 @@ protected:
 	
 	void testCTF_CalculateVoxelContributions() 
 	{	
-
-/*
-
-		std::vector<float> atom_position = {0.5, 0.5, 0.5};
+		std::vector<float> test_subvolumes = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
 		std::vector<float> contributions_of_subcuboids;
-		contributions_of_subcuboids = calcVoxelContributions(atom_position);
+		
+		contributions_of_subcuboids = calcVoxelContributions(test_subvolumes);
 	
 		std::vector<float> assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
-		for (int i=0;i<volumes_of_subcuboids.size();i++)
+		for (int i=0;i<assertion_contributions.size();i++)
 		{
-			CPPUNIT_ASSERT_EQUAL(assertion_subvolumes[i], volumes_of_subcuboids[i]);
+			std::cout << assertion_contributions[i] << std::endl;
+			std::cout << contributions_of_subcuboids.size() << std::endl;
+			CPPUNIT_ASSERT_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i]);
 		}
-*/
-
+		
+		
+		test_subvolumes = {0.015625, 0.046875, 0.140625, 0.046875, 0.046875, 0.140625, 0.421875, 0.140625};
+		assertion_contributions = {0.421875,  0.140625,  0.046875,  0.140625,  0.140625,  0.046875, 0.015625,  0.046875};
+		
+		contributions_of_subcuboids = calcVoxelContributions(test_subvolumes);
+		
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			std::cout << assertion_contributions[i] << std::endl;
+			std::cout << contributions_of_subcuboids.size() << std::endl;
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
+		}
 	}
 	
 
