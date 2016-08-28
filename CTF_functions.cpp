@@ -2,6 +2,8 @@
 #include <vector>
 #include <iostream>
 #include <stdlib.h>     /* abs */
+#include <cmath>	/*modf */
+#include <limits>	/*modf */
 
 
 std::vector<std::vector<float> > initializeCubeVertices()
@@ -59,35 +61,18 @@ double getIntegralPart(double number)
 	return intpart;
 }
 
-/*
-std::vector<std::vector<int> > determineSurroundingVoxelIndices(std::vector<float> atom_position, float voxel_size)
+std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size)
 {
-
-	vertices = initializeVertices();
-	int ix = 0;
-	int iy = 0;
-	int iz = 0;
-
-	ix = getIntegralPart(atom_position[0]);
-	iy = getIntegralPart(atom_position[1]);
-	iz = getIntegralPart(atom_position[2]);
-
-	coordinate voxel_index = {ix/voxel_size, iy/voxel_size , iz/voxel_size};
-	return voxel_index;
-}
-*/
-
-coordinate projectAtompositionToUnitvoxel(std::vector<float> atom_position)
-{
-	float fx = 0;
-	float fy = 0;
-	float fz = 0;
-
-	fx = getFractionalPart(atom_position[0]);
-	fy = getFractionalPart(atom_position[1]);
-	fz = getFractionalPart(atom_position[2]);
+	std::vector<float> position_in_voxel = {0, 0, 0};
+	std::vector<float> unit_voxel_index = {0, 0, 0};
 	
-	coordinate unit_voxel_index = {fx, fy, fz};
+	for (int i=0;i<position_in_voxel.size();i++)
+	{
+		// get the remainder 
+		position_in_voxel[i] = std::fmod(atom_position[i], voxel_size);
+		// normalize to unit voxel size
+		unit_voxel_index[i] = position_in_voxel[i] / voxel_size;
+	}
 	return unit_voxel_index;
 	
 }

@@ -13,7 +13,7 @@ float z;
 double getIntegralPart(double number);
 double getFractionalPart(double number);
 
-coordinate projectAtompositionToUnitvoxel(std::vector<float> atom_position);
+std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size);
 
 std::vector<std::vector<float> > initializeCubeVertices();
 

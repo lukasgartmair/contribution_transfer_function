@@ -29,6 +29,9 @@ public:
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test3 - Calculate Voxel Contributions from an atom position",
 				&TestCTF::testCTF_CalculateVoxelContributionsFromAtomposition));
 
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test4 - Project Atom Position to unit voxel",
+				&TestCTF::testCTF_ProjectAtompositionToUnitvoxel));
+
 				
 		return suiteOfTests;
 	}
@@ -101,6 +104,70 @@ protected:
 		}
 	}
 	
+	
+	
+	void testCTF_ProjectAtompositionToUnitvoxel()
+	{
+		std::vector<float> atom_position = {0.5, 0.5, 0.5};
+		std::vector<float> unit_position = {0, 0, 0};
+		float voxel_size = 1;
+
+		std::vector<float> position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		std::vector<float> assert_position = {0, 0, 0};
+		assert_position[0] = 0.5;
+		assert_position[1] = 0.5;
+		assert_position[2] = 0.5;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_EQUAL(assert_position[i], position_in_unit_voxel[i]);
+		}
+		
+		atom_position = {2.5, 2.5, 2.5};
+		unit_position = {0, 0, 0};
+		voxel_size = 1;
+
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		assert_position = {0, 0, 0};
+		assert_position[0] = 0.5;
+		assert_position[1] = 0.5;
+		assert_position[2] = 0.5;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_EQUAL(assert_position[i], position_in_unit_voxel[i]);
+		}
+		
+		atom_position = {-2.5, -2.5, -2.5};
+		unit_position = {0, 0, 0};
+		voxel_size = 1;
+
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		assert_position = {0, 0, 0};
+		assert_position[0] = -0.5;
+		assert_position[1] = -0.5;
+		assert_position[2] = -0.5;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_EQUAL(assert_position[i], position_in_unit_voxel[i]);
+		}
+		atom_position = {-2.5, -2.5, -2.5};
+		unit_position = {0, 0, 0};
+		voxel_size = 2;
+
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		assert_position = {0, 0, 0};
+		assert_position[0] = -0.25;
+		assert_position[1] = -0.25;
+		assert_position[2] = -0.25;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_EQUAL(assert_position[i], position_in_unit_voxel[i]);
+		}
+	}
+	
 	void testCTF_CalculateVoxelContributionsFromAtomposition() 
 	{	
 	
@@ -145,79 +212,8 @@ protected:
 		{
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
 		}
-		
-		// atom position on arbitrary all positive grid position
-		voxel_size =  1;
-		volumes_of_subcuboids;
-		contributions_of_subcuboids;
-		atom_position = {1.5, 1.5, 1.5};
-		assertion_contributions = {0, 0, 0, 0, 0, 0, 1, 0};
-		coordinate current_voxel_index;
-		coordinate current_unit_voxel_index;
-		
-		current_unit_voxel_index = projectAtompositionToUnitvoxel(atom_position);
-		
-		// this dual concept is shit! either change everything to coordinates or everything to vectors!!!!
-		// this is just a workaround and of course to refactor soon!
-		std::vector<float> fractional_atom_position {0, 0, 0};
-
-		fractional_atom_position[0] = current_unit_voxel_index.x;
-		fractional_atom_position[1] = current_unit_voxel_index.y;
-		fractional_atom_position[2] = current_unit_voxel_index.z;
-		
-		vertex_corner_coincidence = checkVertexCornerCoincidence(fractional_atom_position, voxel_size);
-		
-		if (vertex_corner_coincidence == false)
-		{
-			volumes_of_subcuboids = calcSubvolumes(fractional_atom_position, voxel_size);
-			contributions_of_subcuboids = calcVoxelContributions(volumes_of_subcuboids);
-		}
-		else
-		{
-			contributions_of_subcuboids = handleVertexCornerCoincidence(fractional_atom_position, voxel_size);
-		}
-		
-		assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
-		for (int i=0;i<assertion_contributions.size();i++)
-		{
-			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
-		}
-		
-		
-		// atom position on arbitrary all positive grid position
-		voxel_size =  1;
-		volumes_of_subcuboids;
-		contributions_of_subcuboids;
-		atom_position = {-1.5, -1.5, -1.5};
-		
-		current_unit_voxel_index = projectAtompositionToUnitvoxel(atom_position);
-		
-		// this dual concept is shit! either change everything to coordinates or everything to vectors!!!!
-		// this is just a workaround and of course to refactor soon!
-
-		fractional_atom_position[0] = current_unit_voxel_index.x;
-		fractional_atom_position[1] = current_unit_voxel_index.y;
-		fractional_atom_position[2] = current_unit_voxel_index.z;
-		
-		vertex_corner_coincidence = checkVertexCornerCoincidence(fractional_atom_position, voxel_size);
-		
-		if (vertex_corner_coincidence == false)
-		{
-			volumes_of_subcuboids = calcSubvolumes(fractional_atom_position, voxel_size);
-			contributions_of_subcuboids = calcVoxelContributions(volumes_of_subcuboids);
-		}
-		else
-		{
-			contributions_of_subcuboids = handleVertexCornerCoincidence(fractional_atom_position, voxel_size);
-		}
-		
-		assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
-		for (int i=0;i<assertion_contributions.size();i++)
-		{
-			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
-		}
-	
 	}
+
 	
 	
 
