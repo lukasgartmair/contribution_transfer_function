@@ -83,22 +83,27 @@ std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_positi
 
 std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size)
 {
-	int quot;   // quotient
-	int rem;    // remainder
-	std::vector<float> quotients = {0, 0, 0}; 
+
+	std::vector<float> floored_voxel_indices = {0, 0, 0}; 
 	std::vector<std::vector<float> > surr_voxel_indices;
-	
+	float floored_position = 0;
+	int quot; // quotient
 	for (int i=0;i<atom_position.size();i++)
 	{
+  		floored_position = floor(atom_position[i]);
+		
 		div_t divresult;
-  		divresult = div(atom_position[i],voxel_size);
-		quotients[i] = divresult.quot;
+  		divresult = div(floored_position, voxel_size);
+		
+		floored_voxel_indices[i] = divresult.quot;
 	}
 	// get the minimum element from the divisions in order to find the bottom corner of the 8 surrounding voxel values (min, min, min)
 	// The return value from std::min_element() is an iterator so it needs to be dereferenced.
+	
 
-	float bottom_corner = *std::min_element(quotients.begin(), quotients.end());
-	std::cout << bottom_corner << std::endl;
+
+	
+	float bottom_corner = *std::min_element(floored_voxel_indices.begin(), floored_voxel_indices.end());
 	
 	surr_voxel_indices = initializeCubeVertices(bottom_corner);
 	

@@ -207,8 +207,108 @@ protected:
 				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
 			}
 		}
+		
+		// bigger voxelsize
 	
+		atom_position = {2.5, 2.5, 2.5};
+		voxel_size = 2;
+		start_index = 1;
+		assert_voxel_vertices = initializeCubeVertices(start_index);
+		
+		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		
+		for (int i=0;i<number_of_vertices;i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+			}
+		}
+		
+		// bigger voxelsize
 	
+		atom_position = {2.5, 2.5, 2.5};
+		voxel_size = 3;
+		start_index = 0;
+		assert_voxel_vertices = initializeCubeVertices(start_index);
+		
+		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		
+		for (int i=0;i<number_of_vertices;i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+			}
+		}
+		
+		// negative atom position
+	
+		atom_position = {-2.5, -2.5, -2.5};
+		voxel_size = 1;
+		start_index = -3;
+		assert_voxel_vertices = initializeCubeVertices(start_index);
+		
+		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		
+		for (int i=0;i<number_of_vertices;i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+			}
+		}
+		
+		// negative atom position
+	
+		atom_position = {-1.7, -1.7, -1.7};
+		voxel_size = 2;
+		start_index = -1;
+		assert_voxel_vertices = initializeCubeVertices(start_index);
+		
+		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		
+		for (int i=0;i<number_of_vertices;i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+			}
+		}
+		
+		// negative atom position and float voxel size
+	
+		atom_position = {-1.7, -1.7, -1.7};
+		voxel_size = 1.5;
+		start_index = -2;
+		assert_voxel_vertices = initializeCubeVertices(start_index);
+		
+		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		
+		for (int i=0;i<number_of_vertices;i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+			}
+		}
+		
+		// negative atom position and float voxel size and arbitrary positions
+	
+		atom_position = {-1.9, -0.1, 0.7};
+		voxel_size = 1.5;
+		start_index = -2;
+		assert_voxel_vertices = initializeCubeVertices(start_index);
+		
+		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		
+		for (int i=0;i<number_of_vertices;i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+			}
+		}
 	
 	}
 	
