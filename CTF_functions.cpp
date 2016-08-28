@@ -4,45 +4,47 @@
 #include <stdlib.h>     /* abs */
 #include <cmath>	/*modf */
 #include <limits>	/*modf */
+#include <algorithm>	/*std::min_element */
+#include <iterator>	/*std::begin, std::end */
 
 
-std::vector<std::vector<float> > initializeCubeVertices()
+std::vector<std::vector<float> > initializeCubeVertices(float start_index)
 {
 	int number_of_vertices = 8;
 	int xyz = 3;
 	std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyz));
 
-	vertices[0][0] = 0;
-	vertices[0][1] = 0;
-	vertices[0][2] = 0;
+	vertices[0][0] = start_index;
+	vertices[0][1] = start_index;
+	vertices[0][2] = start_index;
 
-	vertices[1][0] = 1;
-	vertices[1][1] = 0;
-	vertices[1][2] = 0;
+	vertices[1][0] = start_index+1;
+	vertices[1][1] = start_index;
+	vertices[1][2] = start_index;
 
-	vertices[2][0] = 1;
-	vertices[2][1] = 1;
-	vertices[2][2] = 0;
+	vertices[2][0] = start_index+1;
+	vertices[2][1] = start_index+1;
+	vertices[2][2] = start_index;
 
-	vertices[3][0] = 0;
-	vertices[3][1] = 1;
-	vertices[3][2] = 0;
+	vertices[3][0] = start_index;
+	vertices[3][1] = start_index+1;
+	vertices[3][2] = start_index;
 
-	vertices[4][0] = 0;
-	vertices[4][1] = 0;
-	vertices[4][2] = 1;
+	vertices[4][0] = start_index;
+	vertices[4][1] = start_index;
+	vertices[4][2] = start_index+1;
 
-	vertices[5][0] = 1;
-	vertices[5][1] = 0;
-	vertices[5][2] = 1;
+	vertices[5][0] = start_index+1;
+	vertices[5][1] = start_index;
+	vertices[5][2] = start_index+1;
 
-	vertices[6][0] = 1;
-	vertices[6][1] = 1;
-	vertices[6][2] = 1;
+	vertices[6][0] = start_index+1;
+	vertices[6][1] = start_index+1;
+	vertices[6][2] = start_index+1;
 
-	vertices[7][0] = 0;
-	vertices[7][1] = 1;
-	vertices[7][2] = 1;
+	vertices[7][0] = start_index;
+	vertices[7][1] = start_index+1;
+	vertices[7][2] = start_index+1;
 	
 	return vertices;
 }
@@ -72,15 +74,42 @@ std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_positi
 		position_in_voxel[i] = std::fmod(atom_position[i], voxel_size);
 		// normalize to unit voxel size
 		unit_voxel_index[i] = position_in_voxel[i] / voxel_size;
-	}
+		// get the absolute value
+		unit_voxel_index[i] = fabs(unit_voxel_index[i]);
+	}	
 	return unit_voxel_index;
 	
+}
+
+std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size)
+{
+	int quot;   // quotient
+	int rem;    // remainder
+	std::vector<float> quotients = {0, 0, 0}; 
+	std::vector<std::vector<float> > surr_voxel_indices;
+	
+	for (int i=0;i<atom_position.size();i++)
+	{
+		div_t divresult;
+  		divresult = div(atom_position[i],voxel_size);
+		quotients[i] = divresult.quot;
+	}
+	// get the minimum element from the divisions in order to find the bottom corner of the 8 surrounding voxel values (min, min, min)
+	// The return value from std::min_element() is an iterator so it needs to be dereferenced.
+
+	float bottom_corner = *std::min_element(quotients.begin(), quotients.end());
+	std::cout << bottom_corner << std::endl;
+	
+	surr_voxel_indices = initializeCubeVertices(bottom_corner);
+	
+	return surr_voxel_indices;
 }
 
 bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size)
 {
 	bool conincidence = false;
-	std::vector<std::vector<float> > vertices = initializeCubeVertices();
+	float start_index = 0;
+	std::vector<std::vector<float> > vertices = initializeCubeVertices(start_index);
 	for (int i=0;i<vertices.size();i++)
 	{
 		if (atom_position[0] == vertices[i][0] && (atom_position[1] == vertices[i][1] && (atom_position[2] == vertices[i][2])))
@@ -94,7 +123,8 @@ bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_
 std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size)
 {
 	std::vector<float> normalized_voxel_contributions = {0, 0, 0, 0, 0, 0, 0, 0};
-	std::vector<std::vector<float> > vertices = initializeCubeVertices();
+	float start_index = 0;
+	std::vector<std::vector<float> > vertices = initializeCubeVertices(start_index);
 	for (int i=0;i<vertices.size();i++)
 	{
 		if (atom_position[0] == vertices[i][0] && (atom_position[1] == vertices[i][1] && (atom_position[2] == vertices[i][2])))
@@ -107,8 +137,8 @@ std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_positio
 
 std::vector<float> calcSubvolumes(std::vector<float> atom_position, float voxel_size)
 {
-
-	std::vector<std::vector<float> > vertices = initializeCubeVertices();
+	float start_index = 0;
+	std::vector<std::vector<float> > vertices = initializeCubeVertices(start_index);
 
 	std::vector<float> volumes_of_subcuboids;
 	int xyz_coordinates = 3;

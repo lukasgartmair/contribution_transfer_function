@@ -25,12 +25,17 @@ public:
 				
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test2 - Calculate Voxel Contributions",
 				&TestCTF::testCTF_CalculateVoxelContributions));
+
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test3 - Project Atom Position to unit voxel",
+				&TestCTF::testCTF_ProjectAtompositionToUnitvoxel));
+
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test4 - Determine Surrounding Voxel Vertices",
+				&TestCTF::testCTF_DetermineSurroundingVoxelVertices));
 				
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test3 - Calculate Voxel Contributions from an atom position",
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test5 - Calculate Voxel Contributions from an atom position",
 				&TestCTF::testCTF_CalculateVoxelContributionsFromAtomposition));
 
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test4 - Project Atom Position to unit voxel",
-				&TestCTF::testCTF_ProjectAtompositionToUnitvoxel));
+
 
 				
 		return suiteOfTests;
@@ -145,13 +150,14 @@ protected:
 		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
 
 		assert_position = {0, 0, 0};
-		assert_position[0] = -0.5;
-		assert_position[1] = -0.5;
-		assert_position[2] = -0.5;
+		assert_position[0] = 0.5;
+		assert_position[1] = 0.5;
+		assert_position[2] = 0.5;
 		for (int i=0;i<3;i++)
 		{
 			CPPUNIT_ASSERT_EQUAL(assert_position[i], position_in_unit_voxel[i]);
 		}
+		
 		atom_position = {-2.5, -2.5, -2.5};
 		unit_position = {0, 0, 0};
 		voxel_size = 2;
@@ -159,13 +165,51 @@ protected:
 		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
 
 		assert_position = {0, 0, 0};
-		assert_position[0] = -0.25;
-		assert_position[1] = -0.25;
-		assert_position[2] = -0.25;
+		assert_position[0] = 0.25;
+		assert_position[1] = 0.25;
+		assert_position[2] = 0.25;
 		for (int i=0;i<3;i++)
 		{
 			CPPUNIT_ASSERT_EQUAL(assert_position[i], position_in_unit_voxel[i]);
 		}
+		
+		atom_position = {-2.5, -2.5, -2.5};
+		unit_position = {0, 0, 0};
+		voxel_size = 3;
+
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		assert_position = {0, 0, 0};
+		assert_position[0] = 0.833;
+		assert_position[1] = 0.833;
+		assert_position[2] = 0.833;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_position[i], position_in_unit_voxel[i], 0.001);
+		}
+	}
+	
+	void testCTF_DetermineSurroundingVoxelVertices()
+	{
+		std::vector<float>atom_position = {2.5, 2.5, 2.5};
+		float voxel_size = 1;
+		int number_of_vertices = 8;
+		int xyzs = 3;
+		float start_index = 2;
+		std::vector<std::vector<float> > assert_voxel_vertices = initializeCubeVertices(start_index);
+		
+		std::vector<std::vector<float> > surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		
+		for (int i=0;i<number_of_vertices;i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+			}
+		}
+	
+	
+	
 	}
 	
 	void testCTF_CalculateVoxelContributionsFromAtomposition() 
@@ -212,6 +256,59 @@ protected:
 		{
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
 		}
+		
+		// arbitrary positive atom position
+		voxel_size =  1;
+		volumes_of_subcuboids;
+		contributions_of_subcuboids;
+		atom_position = {2.5, 2.5, 2.5};
+		assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
+		
+		std::vector<float> position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+		
+		vertex_corner_coincidence = checkVertexCornerCoincidence(position_in_unit_voxel , voxel_size);
+		
+		if (vertex_corner_coincidence == false)
+		{
+			volumes_of_subcuboids = calcSubvolumes(position_in_unit_voxel , voxel_size);
+			contributions_of_subcuboids = calcVoxelContributions(volumes_of_subcuboids);
+		}
+		else
+		{
+			contributions_of_subcuboids = handleVertexCornerCoincidence(position_in_unit_voxel, voxel_size);
+		}
+		
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
+		}
+		
+		// arbitrary negative atom position
+		voxel_size =  1;
+		volumes_of_subcuboids;
+		contributions_of_subcuboids;
+		atom_position = {-2.5, -2.5, -2.5};
+		assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
+		
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+		
+		vertex_corner_coincidence = checkVertexCornerCoincidence(position_in_unit_voxel , voxel_size);
+		
+		if (vertex_corner_coincidence == false)
+		{
+			volumes_of_subcuboids = calcSubvolumes(position_in_unit_voxel , voxel_size);
+			contributions_of_subcuboids = calcVoxelContributions(volumes_of_subcuboids);
+		}
+		else
+		{
+			contributions_of_subcuboids = handleVertexCornerCoincidence(position_in_unit_voxel, voxel_size);
+		}
+		
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
+		}
+		
 	}
 
 	

@@ -15,7 +15,9 @@ double getFractionalPart(double number);
 
 std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size);
 
-std::vector<std::vector<float> > initializeCubeVertices();
+std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size);
+
+std::vector<std::vector<float> > initializeCubeVertices(float start_index);
 
 std::vector<float> calcSubvolumes(std::vector<float> atom_position, float voxel_size);
 
