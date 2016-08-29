@@ -81,7 +81,6 @@ std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<f
 	for (int i=0;i<atom_position.size();i++)
 	{	
 		floored_voxel_indices[i] = floor(atom_position[i] / voxel_size);
-		std::cout << floored_voxel_indices[i] << std::endl;
 	}
 	surr_voxel_indices = initializeCubeVertices(floored_voxel_indices[0], floored_voxel_indices[1], floored_voxel_indices[2]);
 	
