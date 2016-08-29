@@ -165,9 +165,9 @@ protected:
 		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
 
 		assert_position = {0, 0, 0};
-		assert_position[0] = 0.25;
-		assert_position[1] = 0.25;
-		assert_position[2] = 0.25;
+		assert_position[0] = 0.75;
+		assert_position[1] = 0.75;
+		assert_position[2] = 0.75;
 		for (int i=0;i<3;i++)
 		{
 			CPPUNIT_ASSERT_EQUAL(assert_position[i], position_in_unit_voxel[i]);
@@ -180,9 +180,9 @@ protected:
 		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
 
 		assert_position = {0, 0, 0};
-		assert_position[0] = 0.833;
-		assert_position[1] = 0.833;
-		assert_position[2] = 0.833;
+		assert_position[0] = 0.166;
+		assert_position[1] = 0.166;
+		assert_position[2] = 0.166;
 		for (int i=0;i<3;i++)
 		{
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_position[i], position_in_unit_voxel[i], 0.001);
@@ -191,6 +191,7 @@ protected:
 	
 	void testCTF_DetermineSurroundingVoxelVertices()
 	{
+		// positive atom position
 		std::vector<float>atom_position = {2.5, 2.5, 2.5};
 		float voxel_size = 1;
 		int number_of_vertices = 8;
@@ -309,6 +310,24 @@ protected:
 				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
 			}
 		}
+	
+		// negative atom position and float voxel size and arbitrary positions
+	
+		atom_position = {-11.9, -0.1, 0.7};
+		voxel_size = 2;
+		start_index = -6;
+		assert_voxel_vertices = initializeCubeVertices(start_index);
+		
+		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		
+		for (int i=0;i<number_of_vertices;i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+			}
+		}
+	
 	
 	}
 	

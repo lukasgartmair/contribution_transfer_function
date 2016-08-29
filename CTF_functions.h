@@ -10,21 +10,18 @@ float y;
 float z;
 } coordinate;
 
-double getIntegralPart(double number);
-double getFractionalPart(double number);
+std::vector<std::vector<float> > initializeCubeVertices(float start_index);
 
 std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size);
 
 std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size);
 
-std::vector<std::vector<float> > initializeCubeVertices(float start_index);
+bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size);
+
+std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size);
 
 std::vector<float> calcSubvolumes(std::vector<float> atom_position, float voxel_size);
 
 std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboids);
-
-bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size);
-
-std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size);
 
 #endif

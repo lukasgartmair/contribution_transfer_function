@@ -49,20 +49,6 @@ std::vector<std::vector<float> > initializeCubeVertices(float start_index)
 	return vertices;
 }
 
-double getFractionalPart(double number)
-{	double fractpart, intpart;
-	fractpart = modf(number , &intpart);
-	// important to return the absolute value with fabs not abs!
-	return fabs(fractpart);
-}
-
-double getIntegralPart(double number)
-{	
-	double intpart;
-	modf(number , &intpart);
-	return intpart;
-}
-
 std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size)
 {
 	std::vector<float> position_in_voxel = {0, 0, 0};
@@ -74,11 +60,21 @@ std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_positi
 		position_in_voxel[i] = std::fmod(atom_position[i], voxel_size);
 		// normalize to unit voxel size
 		unit_voxel_index[i] = position_in_voxel[i] / voxel_size;
-		// get the absolute value
-		unit_voxel_index[i] = fabs(unit_voxel_index[i]);
+		// in order to get a consistent orientation outgoing
+		// from the lowest corner for negative values
+		// 
+		if (unit_voxel_index[i] >= 0)
+		{
+			unit_voxel_index[i] = unit_voxel_index[i];
+	
+		}
+		else
+		{
+			unit_voxel_index[i] = 1 - fabs(unit_voxel_index[i]);
+		}
+	
 	}	
 	return unit_voxel_index;
-	
 }
 
 std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size)
