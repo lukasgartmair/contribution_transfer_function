@@ -196,16 +196,15 @@ protected:
 		float voxel_size = 1;
 		int number_of_vertices = 8;
 		int xyzs = 3;
-		float start_index = 2;
-		std::vector<std::vector<float> > assert_voxel_vertices = initializeCubeVertices(start_index);
+		std::vector<std::vector<float> > assert_voxel_vertices = initializeCubeVertices(2,2,2);
 		
 		std::vector<std::vector<float> > surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
 		
-		for (int i=0;i<number_of_vertices;i++)
+		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
 			for (int j=0;j<xyzs;j++)
 			{
-				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.01);
 			}
 		}
 		
@@ -213,122 +212,115 @@ protected:
 	
 		atom_position = {2.5, 2.5, 2.5};
 		voxel_size = 2;
-		start_index = 1;
-		assert_voxel_vertices = initializeCubeVertices(start_index);
+		assert_voxel_vertices = initializeCubeVertices(1,1,1);
 		
 		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
 		
-		for (int i=0;i<number_of_vertices;i++)
+		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
 			for (int j=0;j<xyzs;j++)
 			{
-				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.01);
 			}
 		}
-		
+
 		// bigger voxelsize
 	
 		atom_position = {2.5, 2.5, 2.5};
 		voxel_size = 3;
-		start_index = 0;
-		assert_voxel_vertices = initializeCubeVertices(start_index);
+		assert_voxel_vertices = initializeCubeVertices(0,0,0);
 		
 		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
 		
-		for (int i=0;i<number_of_vertices;i++)
+		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
 			for (int j=0;j<xyzs;j++)
 			{
-				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.01);
 			}
 		}
-		
 		// negative atom position
 	
 		atom_position = {-2.5, -2.5, -2.5};
 		voxel_size = 1;
-		start_index = -3;
-		assert_voxel_vertices = initializeCubeVertices(start_index);
+		assert_voxel_vertices = initializeCubeVertices(-3,-3,-3);
 		
 		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
 		
-		for (int i=0;i<number_of_vertices;i++)
+		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
 			for (int j=0;j<xyzs;j++)
 			{
-				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.01);
 			}
 		}
+
 		
 		// negative atom position
 	
 		atom_position = {-1.7, -1.7, -1.7};
 		voxel_size = 2;
-		start_index = -1;
-		assert_voxel_vertices = initializeCubeVertices(start_index);
+		assert_voxel_vertices = initializeCubeVertices(-1,-1,-1);
 		
 		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
 		
-		for (int i=0;i<number_of_vertices;i++)
+		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
 			for (int j=0;j<xyzs;j++)
 			{
-				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.01);
 			}
 		}
-		
+
 		// negative atom position and float voxel size
 	
 		atom_position = {-1.7, -1.7, -1.7};
 		voxel_size = 1.5;
-		start_index = -2;
-		assert_voxel_vertices = initializeCubeVertices(start_index);
+		assert_voxel_vertices = initializeCubeVertices(-2,-2,-2);
 		
 		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
 		
-		for (int i=0;i<number_of_vertices;i++)
+		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
 			for (int j=0;j<xyzs;j++)
 			{
-				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.01);
 			}
 		}
-		
+
 		// negative atom position and float voxel size and arbitrary positions
 	
 		atom_position = {-1.9, -0.1, 0.7};
 		voxel_size = 1.5;
-		start_index = -2;
-		assert_voxel_vertices = initializeCubeVertices(start_index);
+		assert_voxel_vertices = initializeCubeVertices(-2,-1,0);
 		
 		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
 		
-		for (int i=0;i<number_of_vertices;i++)
+		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
 			for (int j=0;j<xyzs;j++)
 			{
-				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.01);
 			}
 		}
 	
 		// negative atom position and float voxel size and arbitrary positions
 	
-		atom_position = {-11.9, -0.1, 0.7};
+		atom_position = {-2.9, -0.1, 0.7};
 		voxel_size = 2;
-		start_index = -6;
-		assert_voxel_vertices = initializeCubeVertices(start_index);
+		
+		assert_voxel_vertices = initializeCubeVertices(-2,-1,0);
 		
 		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
 		
-		for (int i=0;i<number_of_vertices;i++)
+		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
 			for (int j=0;j<xyzs;j++)
 			{
-				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.001);
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.01);
 			}
 		}
-	
-	
+
 	}
 	
 	void testCTF_CalculateVoxelContributionsFromAtomposition() 

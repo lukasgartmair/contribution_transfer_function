@@ -10,7 +10,7 @@ float y;
 float z;
 } coordinate;
 
-std::vector<std::vector<float> > initializeCubeVertices(float start_index);
+std::vector<std::vector<float> > initializeCubeVertices(float xmin=0, float ymin=0, float zmin=0);
 
 std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size);
 
