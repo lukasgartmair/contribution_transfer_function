@@ -8,6 +8,8 @@
 #include <iterator>	/*std::begin, std::end */
 
 
+// create shared library of this with sudo g++ -std=c++11 -fPIC -shared CTF_functions.cpp -o /usr/lib/libCTF_functions.so
+
 std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, float zmin)
 {
 	int number_of_vertices = 8;

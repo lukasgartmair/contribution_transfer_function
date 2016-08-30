@@ -255,7 +255,6 @@ protected:
 			}
 		}
 
-		
 		// negative atom position
 	
 		atom_position = {-1.7, -1.7, -1.7};
