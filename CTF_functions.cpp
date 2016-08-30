@@ -78,15 +78,15 @@ std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_positi
 std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size)
 {
 	std::vector<float> floored_voxel_indices = {0, 0, 0}; 
-	std::vector<std::vector<float> > surr_voxel_indices;
+	std::vector<std::vector<float> > adjacent_voxel_indices;
 	
 	for (int i=0;i<atom_position.size();i++)
 	{	
 		floored_voxel_indices[i] = floor(atom_position[i] / voxel_size);
 	}
-	surr_voxel_indices = initializeCubeVertices(floored_voxel_indices[0], floored_voxel_indices[1], floored_voxel_indices[2]);
+	adjacent_voxel_indices = initializeCubeVertices(floored_voxel_indices[0], floored_voxel_indices[1], floored_voxel_indices[2]);
 	
-	return surr_voxel_indices;
+	return adjacent_voxel_indices;
 }
 
 bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size)
