@@ -29,8 +29,8 @@ public:
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test3 - Project Atom Position to unit voxel",
 				&TestCTF::testCTF_ProjectAtompositionToUnitvoxel));
 
-		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test4 - Determine Surrounding Voxel Vertices",
-				&TestCTF::testCTF_DetermineSurroundingVoxelVertices));
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test4 - Determine Adjacent Voxel Vertices",
+				&TestCTF::testCTF_determineAdjacentVoxelVertices));
 				
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test5 - Calculate Voxel Contributions from an atom position",
 				&TestCTF::testCTF_CalculateVoxelContributionsFromAtomposition));
@@ -90,8 +90,6 @@ protected:
 		std::vector<float> assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
 		for (int i=0;i<assertion_contributions.size();i++)
 		{
-			//std::cout << assertion_contributions[i] << std::endl;
-			//std::cout << contributions_of_subcuboids.size() << std::endl;
 			CPPUNIT_ASSERT_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i]);
 		}
 		
@@ -102,8 +100,6 @@ protected:
 		
 		for (int i=0;i<assertion_contributions.size();i++)
 		{
-			//std::cout << assertion_contributions[i] << std::endl;
-			//std::cout << contributions_of_subcuboids.size() << std::endl;
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
 		}
 	}
@@ -203,7 +199,7 @@ protected:
 		}
 	}
 	
-	void testCTF_DetermineSurroundingVoxelVertices()
+	void testCTF_determineAdjacentVoxelVertices()
 	{
 		// positive atom position
 		std::vector<float>atom_position = {2.5, 2.5, 2.5};
@@ -212,7 +208,7 @@ protected:
 		int xyzs = 3;
 		std::vector<std::vector<float> > assert_voxel_vertices = initializeCubeVertices(2,2,2);
 		
-		std::vector<std::vector<float> > surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		std::vector<std::vector<float> > surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
 		
 		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
@@ -228,7 +224,7 @@ protected:
 		voxel_size = 2;
 		assert_voxel_vertices = initializeCubeVertices(1,1,1);
 		
-		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
 		
 		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
@@ -244,7 +240,7 @@ protected:
 		voxel_size = 3;
 		assert_voxel_vertices = initializeCubeVertices(0,0,0);
 		
-		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
 		
 		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
@@ -259,7 +255,7 @@ protected:
 		voxel_size = 1;
 		assert_voxel_vertices = initializeCubeVertices(-3,-3,-3);
 		
-		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
 		
 		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
@@ -275,7 +271,7 @@ protected:
 		voxel_size = 2;
 		assert_voxel_vertices = initializeCubeVertices(-1,-1,-1);
 		
-		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
 		
 		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
@@ -291,7 +287,7 @@ protected:
 		voxel_size = 1.5;
 		assert_voxel_vertices = initializeCubeVertices(-2,-2,-2);
 		
-		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
 		
 		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
@@ -307,7 +303,7 @@ protected:
 		voxel_size = 1.5;
 		assert_voxel_vertices = initializeCubeVertices(-2,-1,0);
 		
-		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
 		
 		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
@@ -324,7 +320,7 @@ protected:
 		
 		assert_voxel_vertices = initializeCubeVertices(-2,-1,0);
 		
-		surr_voxel_vertices = determineSurroundingVoxelVertices(atom_position, voxel_size);
+		surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
 		
 		for (int i=0;i<assert_voxel_vertices.size();i++)
 		{
