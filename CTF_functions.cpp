@@ -54,42 +54,30 @@ std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, 
 
 std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size)
 {
-	std::vector<float> position_in_voxel = {0, 0, 0};
-	std::vector<float> unit_voxel_index = {0, 0, 0};
+	std::vector<float> fractional_position_in_voxel = {0, 0, 0};
+	std::vector<float> atom_position_in_unit_voxel = {0, 0, 0};
 	
-	for (int i=0;i<position_in_voxel.size();i++)
+	for (int i=0;i<fractional_position_in_voxel.size();i++)
 	{
-		// get the remainder! 
-		position_in_voxel[i] = std::fmod(atom_position[i], voxel_size);
+		// get the remainder position for coarse classification 
+		fractional_position_in_voxel[i] = std::fmod(atom_position[i], voxel_size);
 		// normalize to unit voxel size
-		unit_voxel_index[i] = position_in_voxel[i] / voxel_size;
-		// in order to get a consistent orientation outgoing
-		// from the lowest corner for negative values
-		// for positive voxels this is already ok
-		if (unit_voxel_index[i] < 0)
+		atom_position_in_unit_voxel[i] = fractional_position_in_voxel[i] / voxel_size;
+		
+		if (atom_position_in_unit_voxel[i] < 0)
 		{
-			unit_voxel_index[i] = 1 - fabs(unit_voxel_index[i]);
+			atom_position_in_unit_voxel[i] = 1 - fabs(atom_position_in_unit_voxel[i]);
 		}
-	
+		else
+		{	// this is just for clarification that there
+			// has to be made a distinction between positive and negative voxels
+			atom_position_in_unit_voxel[i] = atom_position_in_unit_voxel[i];
+		}
 	}	
-	return unit_voxel_index;
+	return atom_position_in_unit_voxel;
 }
 
-std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size)
-{
-	std::vector<float> floored_voxel_indices = {0, 0, 0}; 
-	std::vector<std::vector<float> > adjacent_voxel_indices;
-	
-	for (int i=0;i<atom_position.size();i++)
-	{	
-		floored_voxel_indices[i] = floor(atom_position[i] / voxel_size);
-	}
-	adjacent_voxel_indices = initializeCubeVertices(floored_voxel_indices[0], floored_voxel_indices[1], floored_voxel_indices[2]);
-	
-	return adjacent_voxel_indices;
-}
-
-bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size)
+bool checkVertexCornerCoincidence(std::vector<float> atom_position)
 {
 	bool conincidence = false;
 	std::vector<std::vector<float> > vertices = initializeCubeVertices();
@@ -103,7 +91,7 @@ bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_
 	return conincidence;
 }
 
-std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size)
+std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position)
 {
 	std::vector<float> normalized_voxel_contributions = {0, 0, 0, 0, 0, 0, 0, 0};
 	std::vector<std::vector<float> > vertices = initializeCubeVertices();
@@ -117,7 +105,7 @@ std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_positio
 	return normalized_voxel_contributions;
 }
 
-std::vector<float> calcSubvolumes(std::vector<float> atom_position, float voxel_size)
+std::vector<float> calcSubvolumes(std::vector<float> atom_position)
 {
 	std::vector<std::vector<float> > vertices = initializeCubeVertices();
 
@@ -130,11 +118,11 @@ std::vector<float> calcSubvolumes(std::vector<float> atom_position, float voxel_
 		
 		for (int j=0; j<xyz_coordinates;j++)
 		{
-			
 			float edge_subcuboid = 0;
 			
 			if (vertices[i][j] == 1)
 			{
+				// 1 - as this is a unit cube with edge lengths 1,1,1
 				edge_subcuboid = 1 - atom_position[j];
 			}
 			else
@@ -178,6 +166,21 @@ std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboi
 	}
 	
 	return normalized_voxel_contributions;
+}
+
+
+std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size)
+{
+	std::vector<float> floored_voxel_indices = {0, 0, 0}; 
+	std::vector<std::vector<float> > adjacent_voxel_indices;
+	
+	for (int i=0;i<atom_position.size();i++)
+	{	
+		floored_voxel_indices[i] = floor(atom_position[i] / voxel_size);
+	}
+	adjacent_voxel_indices = initializeCubeVertices(floored_voxel_indices[0], floored_voxel_indices[1], floored_voxel_indices[2]);
+	
+	return adjacent_voxel_indices;
 }
 
 

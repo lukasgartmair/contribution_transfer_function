@@ -14,14 +14,14 @@ std::vector<std::vector<float> > initializeCubeVertices(float xmin=0, float ymin
 
 std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size);
 
-std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size);
+bool checkVertexCornerCoincidence(std::vector<float> atom_position);
 
-bool checkVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size);
+std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position);
 
-std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position, float voxel_size);
-
-std::vector<float> calcSubvolumes(std::vector<float> atom_position, float voxel_size);
+std::vector<float> calcSubvolumes(std::vector<float> atom_position);
 
 std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboids);
+
+std::vector<std::vector<float> > determineSurroundingVoxelVertices(std::vector<float> atom_position, float voxel_size);
 
 #endif
