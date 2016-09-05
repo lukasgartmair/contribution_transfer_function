@@ -30,7 +30,7 @@ public:
 				&TestCTF::testCTF_ProjectAtompositionToUnitvoxel));
 
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test4 - Determine Adjacent Voxel Vertices",
-				&TestCTF::testCTF_determineAdjacentVoxelVertices));
+				&TestCTF::testCTF_DetermineAdjacentVoxelVertices));
 				
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test5 - Calculate Voxel Contributions from an atom position",
 				&TestCTF::testCTF_CalculateVoxelContributionsFromAtomposition));
@@ -199,7 +199,7 @@ protected:
 		}
 	}
 	
-	void testCTF_determineAdjacentVoxelVertices()
+	void testCTF_DetermineAdjacentVoxelVertices()
 	{
 		// positive atom position
 		std::vector<float>atom_position = {2.5, 2.5, 2.5};
