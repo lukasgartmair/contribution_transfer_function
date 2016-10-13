@@ -54,8 +54,9 @@ std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, 
 
 std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size)
 {
-	std::vector<float> fractional_position_in_voxel = {0, 0, 0};
-	std::vector<float> atom_position_in_unit_voxel = {0, 0, 0};
+	int xyzs = 3;
+	std::vector<float> fractional_position_in_voxel(xyzs);
+	std::vector<float> atom_position_in_unit_voxel(xyzs);
 	
 	for (int i=0;i<fractional_position_in_voxel.size();i++)
 	{
@@ -93,7 +94,8 @@ bool checkVertexCornerCoincidence(std::vector<float> atom_position)
 
 std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position)
 {
-	std::vector<float> normalized_voxel_contributions = {0, 0, 0, 0, 0, 0, 0, 0};
+	int number_of_vertices = 8;
+	std::vector<float> normalized_voxel_contributions(number_of_vertices);
 	std::vector<std::vector<float> > vertices = initializeCubeVertices();
 	for (int i=0;i<vertices.size();i++)
 	{
@@ -169,7 +171,8 @@ std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboi
 
 std::vector<std::vector<float> > determineAdjacentVoxelVertices(std::vector<float> atom_position, float voxel_size)
 {
-	std::vector<float> floored_voxel_indices = {0, 0, 0}; 
+	int xyzs = 3;
+	std::vector<float> floored_voxel_indices(xyzs); 
 	std::vector<std::vector<float> > adjacent_voxel_indices;
 	
 	for (int i=0;i<atom_position.size();i++)
