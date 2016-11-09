@@ -197,6 +197,26 @@ protected:
 		{
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_position[i], position_in_unit_voxel[i], 0.001);
 		}
+
+		// new case for a grid with much higher resolution with voxel sizes of let's say 0.1
+		// how is this supposed to work?
+
+		atom_position = {0.52, -1.31, -0.29};
+		unit_position = {0, 0, 0};
+		voxel_size = 0.1;
+
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		assert_position = {0, 0, 0};
+		assert_position[0] = 0.2;
+		assert_position[1] = 0.9;
+		assert_position[2] = 0.1;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_position[i], position_in_unit_voxel[i], 0.001);
+		}
+
+
 	}
 	
 	void testCTF_DetermineAdjacentVoxelVertices()
@@ -319,6 +339,24 @@ protected:
 		voxel_size = 2;
 		
 		assert_voxel_vertices = initializeCubeVertices(-2,-1,0);
+		
+		surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
+		
+		for (int i=0;i<assert_voxel_vertices.size();i++)
+		{
+			for (int j=0;j<xyzs;j++)
+			{
+				CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_voxel_vertices[i][j], surr_voxel_vertices[i][j], 0.01);
+			}
+		}
+
+		// new case for a grid with much higher resolution with voxel sizes of let's say 0.1
+		// how is this supposed to work?
+
+		atom_position = {0.5, -1.3, -0.2};
+		voxel_size = 0.1;
+		
+		assert_voxel_vertices = initializeCubeVertices(5,-13,-2);
 		
 		surr_voxel_vertices = determineAdjacentVoxelVertices(atom_position, voxel_size);
 		
