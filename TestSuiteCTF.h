@@ -216,6 +216,73 @@ protected:
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_position[i], position_in_unit_voxel[i], 0.001);
 		}
 
+		// new case for a grid with much higher resolution with voxel sizes of let's say 0.1
+		// positive
+		atom_position = {0.05, 0.05, 0.05};
+		unit_position = {0, 0, 0};
+		voxel_size = 0.1;
+
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		assert_position = {0, 0, 0};
+		assert_position[0] = 0.5;
+		assert_position[1] = 0.5;
+		assert_position[2] = 0.5;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_position[i], position_in_unit_voxel[i], 0.001);
+		}
+
+		// new case for a grid with much higher resolution with voxel sizes of let's say 0.1
+
+		atom_position = {0.09, 0.09, 0.09};
+		unit_position = {0, 0, 0};
+		voxel_size = 0.1;
+
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		assert_position = {0, 0, 0};
+		assert_position[0] = 0.9;
+		assert_position[1] = 0.9;
+		assert_position[2] = 0.9;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_position[i], position_in_unit_voxel[i], 0.001);
+		}
+
+		// new case for a grid with much higher resolution with voxel sizes of let's say 0.1
+
+		atom_position = {0.9, 0.9, 0.9};
+		unit_position = {0, 0, 0};
+		voxel_size = 0.1;
+
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		assert_position = {0, 0, 0};
+		assert_position[0] = 1;
+		assert_position[1] = 1;
+		assert_position[2] = 1;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_position[i], position_in_unit_voxel[i], 0.001);
+		}
+
+		// new case for a grid with much higher resolution with voxel sizes of let's say 0.1
+
+		atom_position = {0.25, 0.25, 0.25};
+		unit_position = {0, 0, 0};
+		voxel_size = 0.1;
+
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+
+		assert_position = {0, 0, 0};
+		assert_position[0] = 0.5;
+		assert_position[1] = 0.5;
+		assert_position[2] = 0.5;
+		for (int i=0;i<3;i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assert_position[i], position_in_unit_voxel[i], 0.001);
+		}
 
 	}
 	
@@ -393,8 +460,8 @@ protected:
 		// this error has to be captured
 		// if the volume of the subcube is zero the contribution will also be zero
 		voxel_size =  1;
-		volumes_of_subcuboids;
-		contributions_of_subcuboids;
+		volumes_of_subcuboids = {0,0,0,0,0,0,0,0};
+		contributions_of_subcuboids = {0,0,0,0,0,0,0,0};
 		atom_position = {1, 1, 1};
 		assertion_contributions = {0, 0, 0, 0, 0, 0, 1, 0};
 		
@@ -417,8 +484,8 @@ protected:
 		
 		// arbitrary positive atom position
 		voxel_size =  1;
-		volumes_of_subcuboids;
-		contributions_of_subcuboids;
+		volumes_of_subcuboids = {0,0,0,0,0,0,0,0};
+		contributions_of_subcuboids = {0,0,0,0,0,0,0,0};
 		atom_position = {2.5, 2.5, 2.5};
 		assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
 		
@@ -443,8 +510,8 @@ protected:
 		
 		// arbitrary negative atom position
 		voxel_size =  1;
-		volumes_of_subcuboids;
-		contributions_of_subcuboids;
+		volumes_of_subcuboids = {0,0,0,0,0,0,0,0};
+		contributions_of_subcuboids = {0,0,0,0,0,0,0,0};
 		atom_position = {-2.5, -2.5, -2.5};
 		assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
 		
@@ -466,7 +533,46 @@ protected:
 		{
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
 		}
+
+		// 0 < voxel_size < 1
+		voxel_size =  0.1;
+		volumes_of_subcuboids = {0,0,0,0,0,0,0,0};
+		contributions_of_subcuboids = {0,0,0,0,0,0,0,0};
+		// choosing arbitrary atom position avois that the atom lies on a vertex of the unit cube
+		atom_position = {-2.55, -2.55, -2.55};
+		assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
 		
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+		
+		vertex_corner_coincidence = checkVertexCornerCoincidence(position_in_unit_voxel);
+		
+		if (vertex_corner_coincidence == false)
+		{
+			volumes_of_subcuboids = calcSubvolumes(position_in_unit_voxel);
+			contributions_of_subcuboids = calcVoxelContributions(volumes_of_subcuboids);
+		}
+		else
+		{
+			contributions_of_subcuboids = handleVertexCornerCoincidence(position_in_unit_voxel);
+		}
+
+		for (int i=0;i<position_in_unit_voxel.size();i++)
+		{
+			std::cout << "position_in_unit_voxel[i] " << " = " <<  position_in_unit_voxel[i] << std::endl;
+		}
+
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			std::cout << "contributions_of_subcuboids[i] " << " = " <<  contributions_of_subcuboids[i] << std::endl;
+		}
+
+		
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
+		}
+
+
 	}
 
 	
