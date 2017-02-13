@@ -7,7 +7,6 @@
 #include <algorithm>	/*std::min_element, std::next_permutation, std::sort */
 #include <iterator>	/*std::begin, std::end */
 
-
 // create shared library of this with sudo g++ -std=c++11 -fPIC -shared CTF_functions.cpp -o /usr/lib/libCTF_functions.so
 
 std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, float zmin)
@@ -167,6 +166,37 @@ std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboi
 		normalized_voxel_contributions.push_back(normalized_contribution);
 	}
 	return normalized_voxel_contributions;
+}
+
+std::vector<float> HellmanContributions(std::vector<float> volumes_of_subcuboids)
+{
+	std::vector<float> voxel_contributions;
+	int number_of_vertices = 8;
+	float volume_unitvoxel = 1;
+	
+	// vertex with index 6 is opposed to vertex with index 0 and so on
+	std::vector<float> opposing_subcuboids_indices(number_of_vertices);
+
+	// for c++98
+	opposing_subcuboids_indices[0] = 6;
+	opposing_subcuboids_indices[1] = 7;
+	opposing_subcuboids_indices[2] = 4;
+	opposing_subcuboids_indices[3] = 5;
+	opposing_subcuboids_indices[4] = 2;
+	opposing_subcuboids_indices[5] = 3;
+	opposing_subcuboids_indices[6] = 0;
+	opposing_subcuboids_indices[7] = 1;
+
+	for (int i=0;i<number_of_vertices;i++)
+	{
+		// 1st get index of the opposing subcuboid
+		int index_of_opposed_subcuboid = opposing_subcuboids_indices[i];
+		float contribution = volumes_of_subcuboids[index_of_opposed_subcuboid] / volume_unitvoxel;
+	
+		voxel_contributions.push_back(contribution);
+	}
+
+	return voxel_contributions;
 }
 
 std::vector<std::vector<float> > determineAdjacentVoxelVertices(std::vector<float> atom_position, float voxel_size)

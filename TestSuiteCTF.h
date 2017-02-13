@@ -35,6 +35,9 @@ public:
 		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test5 - Calculate Voxel Contributions from an atom position",
 				&TestCTF::testCTF_CalculateVoxelContributionsFromAtomposition));
 
+		suiteOfTests->addTest(new CppUnit::TestCaller<TestCTF>("Test6 - Hellman sawtooth contributions",
+				&TestCTF::testCTF_HellmanSawtoothContributions));
+
 
 
 				
@@ -555,7 +558,7 @@ protected:
 		{
 			contributions_of_subcuboids = handleVertexCornerCoincidence(position_in_unit_voxel);
 		}
-
+/*
 		for (int i=0;i<position_in_unit_voxel.size();i++)
 		{
 			std::cout << "position_in_unit_voxel[i] " << " = " <<  position_in_unit_voxel[i] << std::endl;
@@ -565,15 +568,103 @@ protected:
 		{
 			std::cout << "contributions_of_subcuboids[i] " << " = " <<  contributions_of_subcuboids[i] << std::endl;
 		}
-
+*/
 		
 		for (int i=0;i<assertion_contributions.size();i++)
 		{
 			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], contributions_of_subcuboids[i], 0.01);
 		}
 
+	}
+
+	void testCTF_HellmanSawtoothContributions()
+	{
+
+	// alternative ctf from http://nucapt.northwestern.edu/refbase/files/UM_95_199.pdf
+	// the contribution is the volume of the opposing subcuboid divided by the total volume
+
+
+		float voxel_size =  1;
+		std::vector<float> volumes_of_subcuboids;
+		std::vector<float> vertex_contributions;
+		std::vector<float> atom_position = {0.5, 0.5, 0.5};
+		std::vector<float> assertion_contributions = {0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125};
+		
+		std::vector<float> position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+		
+		bool vertex_corner_coincidence = checkVertexCornerCoincidence(position_in_unit_voxel);
+		
+		if (vertex_corner_coincidence == false)
+		{
+			volumes_of_subcuboids = calcSubvolumes(position_in_unit_voxel);
+			vertex_contributions = HellmanContributions(volumes_of_subcuboids);
+		}
+		else
+		{
+			vertex_contributions = handleVertexCornerCoincidence(position_in_unit_voxel);
+		}
+		
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], vertex_contributions[i], 0.01);
+		}
+		
+		
+		voxel_size =  0.5;	
+		atom_position = {0.25, 0.25, 0.25};
+		
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+		
+		vertex_corner_coincidence = checkVertexCornerCoincidence(position_in_unit_voxel);
+		
+		std::cout << "vertex_corner_coincidence[i] " << " = " <<  vertex_corner_coincidence << std::endl;
+
+
+		volumes_of_subcuboids = calcSubvolumes(position_in_unit_voxel);
+
+		for (int i=0;i<volumes_of_subcuboids.size();i++)
+		{
+			std::cout << "volumes_of_subcuboids[i] " << " = " <<  volumes_of_subcuboids[i] << std::endl;
+		}
+
+
+		vertex_contributions = HellmanContributions(volumes_of_subcuboids);
+
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], vertex_contributions[i], 0.01);
+		}
+
+
+		voxel_size =  1;	
+		atom_position = {0.99, 0.99, 0.99};
+
+		assertion_contributions = {0, 0, 0, 0, 0, 0, 0.97, 0};
+		
+		position_in_unit_voxel = projectAtompositionToUnitvoxel(atom_position, voxel_size);
+		
+		vertex_corner_coincidence = checkVertexCornerCoincidence(position_in_unit_voxel);
+		
+		std::cout << "vertex_corner_coincidence[i] " << " = " <<  vertex_corner_coincidence << std::endl;
+
+
+		volumes_of_subcuboids = calcSubvolumes(position_in_unit_voxel);
+
+		for (int i=0;i<volumes_of_subcuboids.size();i++)
+		{
+			std::cout << "volumes_of_subcuboids[i] " << " = " <<  volumes_of_subcuboids[i] << std::endl;
+		}
+
+
+		vertex_contributions = HellmanContributions(volumes_of_subcuboids);
+
+		for (int i=0;i<assertion_contributions.size();i++)
+		{
+			CPPUNIT_ASSERT_DOUBLES_EQUAL(assertion_contributions[i], vertex_contributions[i], 0.01);
+		}
 
 	}
+
 
 	
 	
