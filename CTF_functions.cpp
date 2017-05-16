@@ -9,11 +9,14 @@
 
 // create shared library of this with sudo g++ -std=c++11 -fPIC -shared CTF_functions.cpp -o /usr/lib/libCTF_functions.so
 
+namespace CTF{
+
+	const unsigned int number_of_vertices = 8;
+	const unsigned int xyzs = 3;
+
 std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, float zmin)
 {
-	int number_of_vertices = 8;
-	int xyz = 3;
-	std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyz));
+	std::vector<std::vector<float> > vertices(number_of_vertices, std::vector<float>(xyzs));
 
 	vertices[0][0] = xmin;
 	vertices[0][1] = ymin;
@@ -50,14 +53,12 @@ std::vector<std::vector<float> > initializeCubeVertices(float xmin, float ymin, 
 	return vertices;
 }
 
-
 std::vector<float> projectAtompositionToUnitvoxel(std::vector<float> atom_position, float voxel_size)
 {
-	int xyzs = 3;
 	std::vector<float> fractional_position_in_voxel(xyzs);
 	std::vector<float> atom_position_in_unit_voxel(xyzs);
 	
-	for (int i=0;i<fractional_position_in_voxel.size();i++)
+	for (unsigned int i=0;i<fractional_position_in_voxel.size();++i)
 	{
 		// get the remainder position for coarse classification 
 		fractional_position_in_voxel[i] = std::fmod(atom_position[i], voxel_size);
@@ -81,7 +82,7 @@ bool checkVertexCornerCoincidence(std::vector<float> atom_position)
 {
 	bool conincidence = false;
 	std::vector<std::vector<float> > vertices = initializeCubeVertices();
-	for (int i=0;i<vertices.size();i++)
+	for (unsigned int i=0;i<vertices.size();++i)
 	{
 		if (atom_position[0] == vertices[i][0] && (atom_position[1] == vertices[i][1] && (atom_position[2] == vertices[i][2])))
 		{
@@ -93,10 +94,9 @@ bool checkVertexCornerCoincidence(std::vector<float> atom_position)
 
 std::vector<float> handleVertexCornerCoincidence(std::vector<float> atom_position)
 {
-	int number_of_vertices = 8;
 	std::vector<float> normalized_voxel_contributions(number_of_vertices);
 	std::vector<std::vector<float> > vertices = initializeCubeVertices();
-	for (int i=0;i<vertices.size();i++)
+	for (unsigned int i=0;i<vertices.size();++i)
 	{
 		if (atom_position[0] == vertices[i][0] && (atom_position[1] == vertices[i][1] && (atom_position[2] == vertices[i][2])))
 		{
@@ -111,13 +111,12 @@ std::vector<float> calcSubvolumes(std::vector<float> atom_position)
 	std::vector<std::vector<float> > vertices = initializeCubeVertices();
 
 	std::vector<float> volumes_of_subcuboids;
-	int xyz_coordinates = 3;
-	for (int i=0;i<vertices.size();i++)
+	for (int i=0;i<vertices.size();++i)
 	{
 		// the initialization with one instead of zero makes the iterative multiplication possible
 		float volume_subcuboid = 1; 
 		
-		for (int j=0; j<xyz_coordinates;j++)
+		for (unsigned int j=0; j<xyzs;++j)
 		{
 			float edge_subcuboid = 0;
 			
@@ -141,10 +140,9 @@ std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboi
 {
 	std::vector<float> absolute_voxel_contributions;
 	std::vector<float> normalized_voxel_contributions;
-	int number_of_vertices = 8;
 
 	// absolute contribution
-	for (int i=0;i<number_of_vertices;i++)
+	for (unsigned int i=0;i<number_of_vertices;++i)
 	{
 		float absolute_contribution = 0;
 
@@ -154,12 +152,12 @@ std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboi
 	}
 	// sum of absolute contributions
 	float sum_of_all_absolute_contributions = 0;
-	for (int i=0;i<number_of_vertices;i++)
+	for (unsigned int i=0;i<number_of_vertices;++i)
 	{
 		sum_of_all_absolute_contributions = sum_of_all_absolute_contributions + absolute_voxel_contributions[i];
 	}
 	// normalized contributions
-	for (int i=0;i<number_of_vertices;i++)
+	for (unsigned int i=0;i<number_of_vertices;++i)
 	{
 		float normalized_contribution = 0;
 		normalized_contribution = absolute_voxel_contributions[i] / sum_of_all_absolute_contributions;
@@ -171,26 +169,17 @@ std::vector<float> calcVoxelContributions(std::vector<float> volumes_of_subcuboi
 std::vector<float> HellmanContributions(std::vector<float> volumes_of_subcuboids)
 {
 	std::vector<float> voxel_contributions;
-	int number_of_vertices = 8;
-	float volume_unitvoxel = 1;
+	const float volume_unitvoxel = 1;
 	
 	// vertex with index 6 is opposed to vertex with index 0 and so on
-	std::vector<float> opposing_subcuboids_indices(number_of_vertices);
+	// for c++11
 
-	// for c++98
-	opposing_subcuboids_indices[0] = 6;
-	opposing_subcuboids_indices[1] = 7;
-	opposing_subcuboids_indices[2] = 4;
-	opposing_subcuboids_indices[3] = 5;
-	opposing_subcuboids_indices[4] = 2;
-	opposing_subcuboids_indices[5] = 3;
-	opposing_subcuboids_indices[6] = 0;
-	opposing_subcuboids_indices[7] = 1;
+	std::vector<int> opposing_subcuboids_indices = {6,7,4,5,2,3,0,1};
 
-	for (int i=0;i<number_of_vertices;i++)
+	for (unsigned int i=0;i<number_of_vertices;++i)
 	{
 		// 1st get index of the opposing subcuboid
-		int index_of_opposed_subcuboid = opposing_subcuboids_indices[i];
+		unsigned int index_of_opposed_subcuboid = opposing_subcuboids_indices[i];
 		float contribution = volumes_of_subcuboids[index_of_opposed_subcuboid] / volume_unitvoxel;
 	
 		voxel_contributions.push_back(contribution);
@@ -201,11 +190,10 @@ std::vector<float> HellmanContributions(std::vector<float> volumes_of_subcuboids
 
 std::vector<std::vector<float> > determineAdjacentVoxelVertices(std::vector<float> atom_position, float voxel_size)
 {
-	int xyzs = 3;
 	std::vector<float> floored_voxel_indices(xyzs); 
 	std::vector<std::vector<float> > adjacent_voxel_indices;
 	
-	for (int i=0;i<atom_position.size();i++)
+	for (unsigned int i=0;i<atom_position.size();++i)
 	{	
 		// for reference http://www.cplusplus.com/reference/cmath/floor/
 		/*	floor of 2.3 is 2.0
@@ -223,7 +211,7 @@ std::vector<std::vector<float> > determineAdjacentVoxelVertices(std::vector<floa
 
 
 
-
+}
 
 
 
